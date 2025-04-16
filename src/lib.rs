@@ -31,12 +31,9 @@ fn new_mnemonic_signer(mnemonic_phrase: &str, account_index: u32, key_index: u32
     let account_key = root_key
         .derive(hardened_key_start + 1852)
         .derive(hardened_key_start + 1815)
-        .derive(hardened_key_start);
+        .derive(hardened_key_start + account_index);
 
-    let private_key = account_key
-        .derive(account_index)
-        .derive(key_index)
-        .to_raw_key();
+    let private_key = account_key.derive(0).derive(key_index).to_raw_key();
     let public_key = private_key.to_public();
     Box::new(Signer {
         private_key,
@@ -51,12 +48,9 @@ fn new_bech32_signer(root_private_key: &str, account_index: u32, key_index: u32)
     let account_key = root_key
         .derive(hardened_key_start + 1852)
         .derive(hardened_key_start + 1815)
-        .derive(hardened_key_start);
+        .derive(hardened_key_start + account_index);
 
-    let private_key = account_key
-        .derive(account_index)
-        .derive(key_index)
-        .to_raw_key();
+    let private_key = account_key.derive(0).derive(key_index).to_raw_key();
     let public_key = private_key.to_public();
     Box::new(Signer {
         private_key,
