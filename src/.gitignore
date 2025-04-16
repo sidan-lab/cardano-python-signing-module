@@ -1,0 +1,10 @@
+/.idea
+/cmake-build-*
+build
+/target
+Cargo.lock
+lib.rs.h
+libsigner.a
+*.so
+CardanoSigner.py
+__pycache__/
