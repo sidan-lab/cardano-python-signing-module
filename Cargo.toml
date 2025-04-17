@@ -8,8 +8,7 @@ crate-type = ["staticlib"]
 
 [dependencies]
 cxx = "1.0"
-cardano-serialization-lib = "=14.0.0"
-tiny-bip39 = "2.0.0"
+whisky = "1.0.3"
 
 [build-dependencies]
 cxx-build = "1.0"
