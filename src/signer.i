@@ -9,6 +9,8 @@
 #include <string>
 %}
 
-std::string sign_mnemonic(std::string mnemonic, int account_index, int key_index, std::string tx_hex);
+std::string sign_mnemonic(std::string mnemonic, std::string derivation_path, std::string tx_hex);
 
-std::string sign_bech32(std::string bech32, int account_index, int key_index, std::string tx_hex);
+std::string sign_bech32(std::string bech32, std::string derivation_path, std::string tx_hex);
+
+std::string sign_cli(std::string ed25519_key, std::string tx_hex);

@@ -1,6 +1,7 @@
 #include "lib.rs.h"
 
 #include <string>
+#include <vector>
 
 // class MnemonicSigner
 // {
@@ -50,16 +51,23 @@
 //     std::uint32_t key_index;
 // };
 
-std::string sign_mnemonic(std::string mnemonic, int account_index, int key_index, std::string tx_hex)
+std::string sign_mnemonic(std::string mnemonic, std::string derivation_path, std::string tx_hex)
 {
-    auto signer = new_mnemonic_signer(mnemonic, account_index, key_index);
+    auto signer = new_mnemonic_signer(mnemonic, derivation_path);
     std::string signed_tx = signer->sign_transaction(tx_hex).c_str();
     return signed_tx;
 }
 
-std::string sign_bech32(std::string bech32, int account_index, int key_index, std::string tx_hex)
+std::string sign_bech32(std::string bech32, std::string derivation_path, std::string tx_hex)
 {
-    auto signer = new_bech32_signer(bech32, account_index, key_index);
+    auto signer = new_bech32_signer(bech32, derivation_path);
+    std::string signed_tx = signer->sign_transaction(tx_hex).c_str();
+    return signed_tx;
+}
+
+std::string sign_cli(std::string ed25519_key, std::string tx_hex)
+{
+    auto signer = new_cli_signer(ed25519_key);
     std::string signed_tx = signer->sign_transaction(tx_hex).c_str();
     return signed_tx;
 }

@@ -3486,164 +3486,6 @@ SWIG_AsPtr_std_string (PyObject * obj, std::string **val)
 }
 
 
-#include <limits.h>
-#if !defined(SWIG_NO_LLONG_MAX)
-# if !defined(LLONG_MAX) && defined(__GNUC__) && defined (__LONG_LONG_MAX__)
-#   define LLONG_MAX __LONG_LONG_MAX__
-#   define LLONG_MIN (-LLONG_MAX - 1LL)
-#   define ULLONG_MAX (LLONG_MAX * 2ULL + 1ULL)
-# endif
-#endif
-
-
-SWIGINTERN int
-SWIG_AsVal_double (PyObject *obj, double *val)
-{
-  int res = SWIG_TypeError;
-  if (PyFloat_Check(obj)) {
-    if (val) *val = PyFloat_AsDouble(obj);
-    return SWIG_OK;
-#if PY_VERSION_HEX < 0x03000000
-  } else if (PyInt_Check(obj)) {
-    if (val) *val = (double) PyInt_AsLong(obj);
-    return SWIG_OK;
-#endif
-  } else if (PyLong_Check(obj)) {
-    double v = PyLong_AsDouble(obj);
-    if (!PyErr_Occurred()) {
-      if (val) *val = v;
-      return SWIG_OK;
-    } else {
-      PyErr_Clear();
-    }
-  }
-#ifdef SWIG_PYTHON_CAST_MODE
-  {
-    int dispatch = 0;
-    double d = PyFloat_AsDouble(obj);
-    if (!PyErr_Occurred()) {
-      if (val) *val = d;
-      return SWIG_AddCast(SWIG_OK);
-    } else {
-      PyErr_Clear();
-    }
-    if (!dispatch) {
-      long v = PyLong_AsLong(obj);
-      if (!PyErr_Occurred()) {
-	if (val) *val = v;
-	return SWIG_AddCast(SWIG_AddCast(SWIG_OK));
-      } else {
-	PyErr_Clear();
-      }
-    }
-  }
-#endif
-  return res;
-}
-
-
-#include <float.h>
-
-
-#include <math.h>
-
-
-SWIGINTERNINLINE int
-SWIG_CanCastAsInteger(double *d, double min, double max) {
-  double x = *d;
-  if ((min <= x && x <= max)) {
-   double fx, cx, rd;
-   errno = 0;
-   fx = floor(x);
-   cx = ceil(x);
-   rd =  ((x - fx) < 0.5) ? fx : cx; /* simple rint */
-   if ((errno == EDOM) || (errno == ERANGE)) {
-     errno = 0;
-   } else {
-     double summ, reps, diff;
-     if (rd < x) {
-       diff = x - rd;
-     } else if (rd > x) {
-       diff = rd - x;
-     } else {
-       return 1;
-     }
-     summ = rd + x;
-     reps = diff/summ;
-     if (reps < 8*DBL_EPSILON) {
-       *d = rd;
-       return 1;
-     }
-   }
-  }
-  return 0;
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_long (PyObject *obj, long* val)
-{
-#if PY_VERSION_HEX < 0x03000000
-  if (PyInt_Check(obj)) {
-    if (val) *val = PyInt_AsLong(obj);
-    return SWIG_OK;
-  } else
-#endif
-  if (PyLong_Check(obj)) {
-    long v = PyLong_AsLong(obj);
-    if (!PyErr_Occurred()) {
-      if (val) *val = v;
-      return SWIG_OK;
-    } else {
-      PyErr_Clear();
-      return SWIG_OverflowError;
-    }
-  }
-#ifdef SWIG_PYTHON_CAST_MODE
-  {
-    int dispatch = 0;
-    long v = PyInt_AsLong(obj);
-    if (!PyErr_Occurred()) {
-      if (val) *val = v;
-      return SWIG_AddCast(SWIG_OK);
-    } else {
-      PyErr_Clear();
-    }
-    if (!dispatch) {
-      double d;
-      int res = SWIG_AddCast(SWIG_AsVal_double (obj,&d));
-      // Largest double not larger than LONG_MAX (not portably calculated easily)
-      // Note that double(LONG_MAX) is stored in a double rounded up by one (for 64-bit long)
-      // 0x7ffffffffffffc00LL == (int64_t)std::nextafter(double(__uint128_t(LONG_MAX)+1), double(0))
-      const double long_max = sizeof(long) == 8 ? 0x7ffffffffffffc00LL : LONG_MAX;
-      // No equivalent needed for 64-bit double(LONG_MIN) is exactly LONG_MIN
-      if (SWIG_IsOK(res) && SWIG_CanCastAsInteger(&d, LONG_MIN, long_max)) {
-	if (val) *val = (long)(d);
-	return res;
-      }
-    }
-  }
-#endif
-  return SWIG_TypeError;
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_int (PyObject * obj, int *val)
-{
-  long v;
-  int res = SWIG_AsVal_long (obj, &v);
-  if (SWIG_IsOK(res)) {
-    if ((v < INT_MIN || v > INT_MAX)) {
-      return SWIG_OverflowError;
-    } else {
-      if (val) *val = static_cast< int >(v);
-    }
-  }  
-  return res;
-}
-
-
 SWIGINTERNINLINE PyObject *
 SWIG_FromCharPtrAndSize(const char* carray, size_t size)
 {
@@ -3681,18 +3523,13 @@ extern "C" {
 SWIGINTERN PyObject *_wrap_sign_mnemonic(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   std::string arg1 ;
-  int arg2 ;
-  int arg3 ;
-  std::string arg4 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  int val3 ;
-  int ecode3 = 0 ;
-  PyObject *swig_obj[4] ;
+  std::string arg2 ;
+  std::string arg3 ;
+  PyObject *swig_obj[3] ;
   std::string result;
   
   (void)self;
-  if (!SWIG_Python_UnpackTuple(args, "sign_mnemonic", 4, 4, swig_obj)) SWIG_fail;
+  if (!SWIG_Python_UnpackTuple(args, "sign_mnemonic", 3, 3, swig_obj)) SWIG_fail;
   {
     std::string *ptr = (std::string *)0;
     int res = SWIG_AsPtr_std_string(swig_obj[0], &ptr);
@@ -3702,26 +3539,25 @@ SWIGINTERN PyObject *_wrap_sign_mnemonic(PyObject *self, PyObject *args) {
     arg1 = *ptr;
     if (SWIG_IsNewObj(res)) delete ptr;
   }
-  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "sign_mnemonic" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  ecode3 = SWIG_AsVal_int(swig_obj[2], &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "sign_mnemonic" "', argument " "3"" of type '" "int""'");
-  } 
-  arg3 = static_cast< int >(val3);
   {
     std::string *ptr = (std::string *)0;
-    int res = SWIG_AsPtr_std_string(swig_obj[3], &ptr);
+    int res = SWIG_AsPtr_std_string(swig_obj[1], &ptr);
     if (!SWIG_IsOK(res) || !ptr) {
-      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "sign_mnemonic" "', argument " "4"" of type '" "std::string""'"); 
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "sign_mnemonic" "', argument " "2"" of type '" "std::string""'"); 
     }
-    arg4 = *ptr;
+    arg2 = *ptr;
     if (SWIG_IsNewObj(res)) delete ptr;
   }
-  result = sign_mnemonic(SWIG_STD_MOVE(arg1),arg2,arg3,SWIG_STD_MOVE(arg4));
+  {
+    std::string *ptr = (std::string *)0;
+    int res = SWIG_AsPtr_std_string(swig_obj[2], &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "sign_mnemonic" "', argument " "3"" of type '" "std::string""'"); 
+    }
+    arg3 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
+  }
+  result = sign_mnemonic(SWIG_STD_MOVE(arg1),SWIG_STD_MOVE(arg2),SWIG_STD_MOVE(arg3));
   resultobj = SWIG_From_std_string(static_cast< std::string >(result));
   return resultobj;
 fail:
@@ -3732,18 +3568,13 @@ fail:
 SWIGINTERN PyObject *_wrap_sign_bech32(PyObject *self, PyObject *args) {
   PyObject *resultobj = 0;
   std::string arg1 ;
-  int arg2 ;
-  int arg3 ;
-  std::string arg4 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  int val3 ;
-  int ecode3 = 0 ;
-  PyObject *swig_obj[4] ;
+  std::string arg2 ;
+  std::string arg3 ;
+  PyObject *swig_obj[3] ;
   std::string result;
   
   (void)self;
-  if (!SWIG_Python_UnpackTuple(args, "sign_bech32", 4, 4, swig_obj)) SWIG_fail;
+  if (!SWIG_Python_UnpackTuple(args, "sign_bech32", 3, 3, swig_obj)) SWIG_fail;
   {
     std::string *ptr = (std::string *)0;
     int res = SWIG_AsPtr_std_string(swig_obj[0], &ptr);
@@ -3753,26 +3584,60 @@ SWIGINTERN PyObject *_wrap_sign_bech32(PyObject *self, PyObject *args) {
     arg1 = *ptr;
     if (SWIG_IsNewObj(res)) delete ptr;
   }
-  ecode2 = SWIG_AsVal_int(swig_obj[1], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "sign_bech32" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  ecode3 = SWIG_AsVal_int(swig_obj[2], &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "sign_bech32" "', argument " "3"" of type '" "int""'");
-  } 
-  arg3 = static_cast< int >(val3);
   {
     std::string *ptr = (std::string *)0;
-    int res = SWIG_AsPtr_std_string(swig_obj[3], &ptr);
+    int res = SWIG_AsPtr_std_string(swig_obj[1], &ptr);
     if (!SWIG_IsOK(res) || !ptr) {
-      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "sign_bech32" "', argument " "4"" of type '" "std::string""'"); 
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "sign_bech32" "', argument " "2"" of type '" "std::string""'"); 
     }
-    arg4 = *ptr;
+    arg2 = *ptr;
     if (SWIG_IsNewObj(res)) delete ptr;
   }
-  result = sign_bech32(SWIG_STD_MOVE(arg1),arg2,arg3,SWIG_STD_MOVE(arg4));
+  {
+    std::string *ptr = (std::string *)0;
+    int res = SWIG_AsPtr_std_string(swig_obj[2], &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "sign_bech32" "', argument " "3"" of type '" "std::string""'"); 
+    }
+    arg3 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
+  }
+  result = sign_bech32(SWIG_STD_MOVE(arg1),SWIG_STD_MOVE(arg2),SWIG_STD_MOVE(arg3));
+  resultobj = SWIG_From_std_string(static_cast< std::string >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_sign_cli(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  std::string arg1 ;
+  std::string arg2 ;
+  PyObject *swig_obj[2] ;
+  std::string result;
+  
+  (void)self;
+  if (!SWIG_Python_UnpackTuple(args, "sign_cli", 2, 2, swig_obj)) SWIG_fail;
+  {
+    std::string *ptr = (std::string *)0;
+    int res = SWIG_AsPtr_std_string(swig_obj[0], &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "sign_cli" "', argument " "1"" of type '" "std::string""'"); 
+    }
+    arg1 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    int res = SWIG_AsPtr_std_string(swig_obj[1], &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "sign_cli" "', argument " "2"" of type '" "std::string""'"); 
+    }
+    arg2 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
+  }
+  result = sign_cli(SWIG_STD_MOVE(arg1),SWIG_STD_MOVE(arg2));
   resultobj = SWIG_From_std_string(static_cast< std::string >(result));
   return resultobj;
 fail:
@@ -3783,6 +3648,7 @@ fail:
 static PyMethodDef SwigMethods[] = {
 	 { "sign_mnemonic", _wrap_sign_mnemonic, METH_VARARGS, NULL},
 	 { "sign_bech32", _wrap_sign_bech32, METH_VARARGS, NULL},
+	 { "sign_cli", _wrap_sign_cli, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
