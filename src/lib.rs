@@ -1,4 +1,7 @@
-use whisky::{Account, MnemonicWallet, RootKeyWallet, Wallet};
+use whisky_wallet::{
+    derivation_indices::DerivationIndices, Account, MnemonicWallet, RootKeyWallet, Wallet,
+    WalletType,
+};
 
 #[cxx::bridge]
 mod ffi {
@@ -14,22 +17,18 @@ mod ffi {
 }
 
 fn new_mnemonic_signer(mnemonic_phrase: &str, derivation_path: &str) -> Box<Signer> {
-    let wallet = Wallet::new(whisky::WalletType::MnemonicWallet(MnemonicWallet {
+    let wallet = Wallet::new(WalletType::MnemonicWallet(MnemonicWallet {
         mnemonic_phrase: mnemonic_phrase.to_string(),
-        derivation_indices: whisky::derivation_indices::DerivationIndices::from_str(
-            derivation_path,
-        ),
+        derivation_indices: DerivationIndices::from_str(derivation_path),
     }));
     let account = wallet.get_account().unwrap();
     Box::new(Signer { account })
 }
 
 fn new_bech32_signer(root_private_key: &str, derivation_path: &str) -> Box<Signer> {
-    let wallet = Wallet::new(whisky::WalletType::RootKeyWallet(RootKeyWallet {
+    let wallet = Wallet::new(WalletType::RootKeyWallet(RootKeyWallet {
         root_key: root_private_key.to_string(),
-        derivation_indices: whisky::derivation_indices::DerivationIndices::from_str(
-            derivation_path,
-        ),
+        derivation_indices: DerivationIndices::from_str(derivation_path),
     }));
     let account = wallet.get_account().unwrap();
     Box::new(Signer { account })
