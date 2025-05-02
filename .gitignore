@@ -8,3 +8,4 @@ libsigner.a
 *.so
 CardanoSigner.py
 __pycache__/
+*.h
