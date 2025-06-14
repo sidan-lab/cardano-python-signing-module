@@ -2,6 +2,8 @@
 include Cargo.toml
 include Cargo.lock
 include build.rs
+include requirements.txt
+include requirements-build.txt
 
 # Include all source files from src/
 recursive-include src *.cpp *.h *.i *.rs *.py

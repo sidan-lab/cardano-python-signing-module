@@ -33,6 +33,25 @@ from setuptools.command.sdist import sdist
 from setuptools.command.bdist_wheel import bdist_wheel
 
 
+def read_requirements(filename):
+    """Read requirements from a requirements file, filtering out comments and empty lines."""
+    requirements_path = Path(__file__).parent / filename
+    if not requirements_path.exists():
+        return []
+    
+    with open(requirements_path, 'r', encoding='utf-8') as f:
+        requirements = []
+        for line in f:
+            line = line.strip()
+            # Skip empty lines and comments
+            if line and not line.startswith('#'):
+                # Handle inline comments
+                requirement = line.split('#')[0].strip()
+                if requirement:
+                    requirements.append(requirement)
+        return requirements
+
+
 def check_prerequisites(check_swig=True):
     """Check if all required build tools are installed.
     
@@ -1085,9 +1104,7 @@ setup(
         'bdist_wheel': CustomBdistWheel,
     },
     python_requires='>=3.7',
-    install_requires=[
-        # Add any Python dependencies here
-    ],
+    install_requires=read_requirements('requirements.txt'),
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
