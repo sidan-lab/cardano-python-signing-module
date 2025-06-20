@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Script to build and publish source distributions for CardanoSigner
+Script to build and publish source distributions for cardano-python-signing-module
 """
 import os
 import shutil
@@ -150,11 +150,11 @@ def main():
         if upload_to_testpypi():
             print("\n✓ Successfully uploaded to TestPyPI!")
             print("Test installation with:")
-            print("pip install --index-url https://test.pypi.org/simple/ CardanoSigner")
+            print("pip install --index-url https://test.pypi.org/simple/ cardano-python-signing-module")
     elif choice == "2":
         if upload_to_pypi():
             print("\n✓ Successfully uploaded to PyPI!")
-            print("Install with: pip install CardanoSigner")
+            print("Install with: pip install cardano-python-signing-module")
     else:
         print("Done.")
 

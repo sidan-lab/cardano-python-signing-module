@@ -896,7 +896,7 @@ class PlatformHelpCommand(Command):
         print("   • If compiler test fails, try a different compiler or update existing one")
         
         print("\n" + "="*70)
-        print("For more help, visit: https://github.com/sidan-lab/python-signing-module")
+        print("For more help, visit: https://github.com/sidan-lab/cardano-python-signing-module")
         print("="*70 + "\n")
 
 
@@ -1083,14 +1083,14 @@ else:
     long_description = 'Python signing module, implementation in Rust, ported over to C++, then to Python.'
 
 setup(
-    name='python-signing-module',
+    name='cardano-python-signing-module',
     version='0.1.0',
     author='Your Name',
     author_email='your.email@example.com',
     description='Python signing module for Cardano transactions',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/sidan-lab/python-signing-module',
+    url='https://github.com/sidan-lab/cardano-python-signing-module',
     packages=[],  # No packages, just extension modules
     package_dir={'': 'src'},  # Tell setup.py to look for modules in src/
     py_modules=['CardanoSigner'],
